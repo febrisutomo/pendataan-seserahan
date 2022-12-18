@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "160001448946",
+    "project_id": "pendataanseserahan-d81b7",
+    "storage_bucket": "pendataanseserahan-d81b7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:160001448946:android:3d8531ddcc735bdb7be96b",
+        "android_client_info": {
+          "package_name": "com.si.pendataanseserahan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "160001448946-gjpb56iiqj0oq420rfha7loi99dd3tot.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsEV_MXW1O1AnQ83HGfD4b3cOROGqe5Xw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "160001448946-gjpb56iiqj0oq420rfha7loi99dd3tot.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

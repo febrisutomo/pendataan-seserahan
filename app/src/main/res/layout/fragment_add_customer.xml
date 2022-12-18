@@ -1,0 +1,158 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Tambah Pelanggan"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="24dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight=".3"
+            android:layout_height="wrap_content"
+            android:text="Nama"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/etNama"
+            android:layout_width="0dp"
+            android:layout_weight=".7"
+            android:layout_height="wrap_content"
+            android:hint="Masukkan nama"
+            android:textSize="16sp"
+            android:importantForAutofill="no" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+
+        android:layout_marginBottom="16dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight=".3"
+            android:layout_height="wrap_content"
+            android:text="Jen. Kelamin"
+            android:textColor="@color/black"
+            android:layout_gravity="center_vertical"
+            android:textSize="16sp" />
+
+        <RadioGroup
+            android:id="@+id/rgJk"
+            android:layout_width="0dp"
+            android:layout_weight=".7"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+
+            <RadioButton
+                android:id="@+id/rbMale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Laki-laki"
+                android:checked="true"
+                android:textSize="16sp"
+                />
+
+            <RadioButton
+                android:id="@+id/rbFemale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Perempuan"
+                android:textSize="16sp"
+                />
+
+        </RadioGroup>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight=".3"
+            android:layout_height="wrap_content"
+            android:text="Alamat"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/etAlamat"
+            android:layout_width="0dp"
+            android:layout_weight=".7"
+            android:layout_height="wrap_content"
+            android:hint="Masukkan alamat"
+            android:textSize="16sp"
+            android:importantForAutofill="no" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight=".3"
+            android:layout_height="wrap_content"
+            android:text="No. HP"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/etNoHp"
+            android:layout_width="0dp"
+            android:layout_weight=".7"
+            android:layout_height="wrap_content"
+            android:hint="Masukkan No. HP"
+            android:textSize="16sp"
+            android:importantForAutofill="no" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <ImageView
+            android:id="@+id/ivGambar"
+            android:layout_width="0dp"
+            android:layout_weight=".5"
+            android:layout_height="120dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:padding="8dp"
+            android:src="@drawable/user" />
+
+        <Button
+            android:id="@+id/btnGambar"
+            android:layout_width="0dp"
+            android:layout_weight=".5"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Pilih Foto"
+            android:textAllCaps="false" />
+
+    </LinearLayout>
+</LinearLayout>

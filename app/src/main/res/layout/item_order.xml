@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    android:clickable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="6dp"
+    android:id="@+id/card">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight=".25"
+                android:layout_height="wrap_content"
+                android:text="Tanggal" />
+
+            <TextView
+                android:id="@+id/tvTanggal"
+                android:layout_width="0dp"
+                android:layout_weight=".75"
+                android:layout_height="wrap_content"
+                android:text=":" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight=".25"
+                android:layout_height="wrap_content"
+                android:text="Pelanggan" />
+
+            <TextView
+                android:id="@+id/tvPelanggan"
+                android:layout_width="0dp"
+                android:layout_weight=".75"
+                android:layout_height="wrap_content"
+                android:text=":" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight=".25"
+                android:layout_height="wrap_content"
+                android:text="Produk" />
+
+            <TextView
+                android:id="@+id/tvProduk"
+                android:layout_width="0dp"
+                android:layout_weight=".75"
+                android:layout_height="wrap_content"
+                android:text=":" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight=".25"
+                android:layout_height="wrap_content"
+                android:text="Harga" />
+
+            <TextView
+                android:id="@+id/tvHarga"
+                android:layout_width="0dp"
+                android:layout_weight=".75"
+                android:layout_height="wrap_content"
+                android:text=":" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight=".25"
+                android:layout_height="wrap_content"
+                android:text="Jumlah" />
+
+            <TextView
+                android:id="@+id/tvJumlah"
+                android:layout_width="0dp"
+                android:layout_weight=".75"
+                android:layout_height="wrap_content"
+                android:text=":" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight=".25"
+                android:layout_height="wrap_content"
+                android:text="Bayar" />
+
+            <TextView
+                android:id="@+id/tvBayar"
+                android:layout_width="0dp"
+                android:layout_weight=".75"
+                android:layout_height="wrap_content"
+                android:text=":" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+
+</androidx.cardview.widget.CardView>
