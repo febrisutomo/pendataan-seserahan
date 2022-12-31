@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -30,10 +31,14 @@ public class OrderActivity extends AppCompatActivity {
     OrderViewAdapter adapter;
     DatabaseReference db = FirebaseDatabase.getInstance().getReference();
     ArrayList<Order> orderList;
+    ArrayList<Customer> customerList;
+    ArrayList<Product> productList;
+    
     RecyclerView recyclerView;
     EditText etSearch;
     FloatingActionButton btnTambah;
 
+    String namaPelanggan, namaProduk;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -79,13 +84,62 @@ public class OrderActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.rvOrder);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+        
+        getCustomers();
+        getProducts();
 
-        tampilData();
+        showData();
 
 
     }
 
-    private void tampilData() {
+    private void getProducts() {
+        db.child("Product").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                productList = new ArrayList<>();
+
+                for (DataSnapshot item : snapshot.getChildren()) {
+                    Product product = item.getValue(Product.class);
+
+                    product.setKey(item.getKey());
+                    productList.add(product);
+                }
+                
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void getCustomers() {
+        db.child("Customer").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                customerList = new ArrayList<>();
+
+                for (DataSnapshot item : snapshot.getChildren()) {
+                    Customer customer = item.getValue(Customer.class);
+
+                    customer.setKey(item.getKey());
+                    customerList.add(customer);
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void showData() {
         db.child("Order").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -97,7 +151,8 @@ public class OrderActivity extends AppCompatActivity {
                     orderList.add(order);
                 }
 
-                adapter = new OrderViewAdapter(orderList);
+               
+                adapter = new OrderViewAdapter(orderList, customerList, productList);
                 recyclerView.setAdapter(adapter);
             }
 
@@ -111,9 +166,24 @@ public class OrderActivity extends AppCompatActivity {
     private void filter(String text) {
         ArrayList<Order> filteredList = new ArrayList<>();
 
-        for (Order item : orderList){
-            if (item.getPelanggan().toLowerCase().contains(text.toLowerCase()) || item.getProduk().toLowerCase().contains(text.toLowerCase())){
-                filteredList.add(item);
+
+
+        for (Order order : orderList){
+            namaPelanggan= "";
+            namaProduk = "";
+            for (Customer customer : customerList) {
+                if (customer.getKey().equals(order.getPelanggan())) {
+                    namaPelanggan = customer.getNama();
+                }
+            }
+
+            for (Product product : productList) {
+                if (product.getKey().equals(order.getProduk())) {
+                    namaProduk = product.getNama();
+                }
+            }
+            if (namaPelanggan.toLowerCase().contains(text.toLowerCase()) || namaProduk.toLowerCase().contains(text.toLowerCase()) || order.getTanggal().toLowerCase().contains(text.toLowerCase())){
+                filteredList.add(order);
             }
         }
 

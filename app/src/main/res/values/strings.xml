@@ -6,6 +6,11 @@
         <item>Modern</item>
     </array>
 
+    <array name="metode_bayar">
+        <item>Tunai</item>
+        <item>Non Tunai</item>
+    </array>
+
     <array name="customers">
         <item>Pilih Pelanggan</item>
     </array>
@@ -32,4 +37,5 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="title_activity_edit_transaction">EditTransactionActivity</string>
 </resources>

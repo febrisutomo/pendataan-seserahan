@@ -3,25 +3,27 @@ package com.si.pendataanseserahan;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Order implements Parcelable {
+public class Transaction implements Parcelable {
 
-    private String id, tanggal, pelanggan, produk, key;
-    private int harga, jumlah;
+    private String id, tanggal, pelanggan, produk, metodeBayar, key;
+    private int harga, jumlah, bayar;
 
-    public Order (){
+    public Transaction (){
 
     }
 
-    public Order( String id, String tanggal, String pelanggan, String produk, int harga, int jumlah){
+    public Transaction( String id, String tanggal, String pelanggan, String produk, int harga, int jumlah, int bayar, String metodeBayar){
         this.id = id;
         this.tanggal = tanggal;
         this.pelanggan = pelanggan;
         this.produk = produk;
         this.harga = harga;
         this.jumlah = jumlah;
+        this.bayar = bayar;
+        this.metodeBayar = metodeBayar;
     }
 
-    protected Order(Parcel in) {
+    protected Transaction(Parcel in) {
         id = in.readString();
         tanggal = in.readString();
         pelanggan = in.readString();
@@ -29,17 +31,19 @@ public class Order implements Parcelable {
         key = in.readString();
         harga = in.readInt();
         jumlah = in.readInt();
+        bayar = in.readInt();
+        metodeBayar = in.readString();
     }
 
-    public static final Creator<Order> CREATOR = new Creator<Order>() {
+    public static final Creator<Transaction> CREATOR = new Creator<Transaction>() {
         @Override
-        public Order createFromParcel(Parcel in) {
-            return new Order(in);
+        public Transaction createFromParcel(Parcel in) {
+            return new Transaction(in);
         }
 
         @Override
-        public Order[] newArray(int size) {
-            return new Order[size];
+        public Transaction[] newArray(int size) {
+            return new Transaction[size];
         }
     };
 
@@ -91,6 +95,22 @@ public class Order implements Parcelable {
         return jumlah;
     }
 
+    public int getBayar() {
+        return bayar;
+    }
+
+    public void setBayar(int bayar) {
+        this.bayar = bayar;
+    }
+
+    public String getMetodeBayar() {
+        return metodeBayar;
+    }
+
+    public void setMetodeBayar(String metodeBayar) {
+        this.metodeBayar = metodeBayar;
+    }
+
     public void setKey(String key) {
         this.key = key;
     }
@@ -98,6 +118,7 @@ public class Order implements Parcelable {
     public String getKey() {
         return key;
     }
+
 
     @Override
     public int describeContents() {
@@ -113,5 +134,7 @@ public class Order implements Parcelable {
         dest.writeString(key);
         dest.writeInt(harga);
         dest.writeInt(jumlah);
+        dest.writeInt(bayar);
+        dest.writeString(metodeBayar);
     }
 }

@@ -1,20 +1,21 @@
 package com.si.pendataanseserahan;
 
-import android.app.ProgressDialog;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -25,29 +26,25 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class ProductActivity extends AppCompatActivity {
+public class TransactionActivity extends AppCompatActivity {
 
-    ProductViewAdapter adapter;
+    TransactionViewAdapter adapter;
     DatabaseReference db = FirebaseDatabase.getInstance().getReference();
-    ArrayList<Product> productList;
+    ArrayList<Transaction> transactionList;
     RecyclerView recyclerView;
     EditText etSearch;
     FloatingActionButton btnTambah;
 
-    ProgressDialog progress;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_product);
+        setContentView(R.layout.activity_transaction);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle("Data Produk");
+        actionBar.setTitle("Data Transaksi");
         actionBar.setDisplayHomeAsUpEnabled(true);
-
-        progress = new ProgressDialog(this);
-        progress.setMessage("Harap tunggu sebentar...");
-        progress.setCancelable(false);
 
         etSearch = findViewById(R.id.etSearch);
 
@@ -73,12 +70,12 @@ public class ProductActivity extends AppCompatActivity {
         btnTambah.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(ProductActivity.this, AddProductActivity.class));
+                startActivity(new Intent(TransactionActivity.this, AddTransactionActivity.class));
             }
         });
 
 
-        recyclerView = findViewById(R.id.rvProduk);
+        recyclerView = findViewById(R.id.rvTransaction);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
@@ -88,40 +85,36 @@ public class ProductActivity extends AppCompatActivity {
     }
 
     private void tampilData() {
-        progress.show();
-        db.child("Product").addValueEventListener(new ValueEventListener() {
+        db.child("Transaction").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                productList = new ArrayList<>();
+                transactionList = new ArrayList<>();
                 for (DataSnapshot item : snapshot.getChildren()){
-                    Product product= item.getValue(Product.class);
+                    Transaction transaction = item.getValue(Transaction.class);
 
-                    product.setKey(item.getKey());
-                    productList.add(product);
+                    transaction.setKey(item.getKey());
+                    transactionList.add(transaction);
                 }
 
-                adapter = new ProductViewAdapter(productList);
+                if (transactionList.size() == 0 ){
+                    Toast.makeText(TransactionActivity.this, "Tidak ada data!", Toast.LENGTH_SHORT).show();
+                }
+                adapter = new TransactionViewAdapter(transactionList);
                 recyclerView.setAdapter(adapter);
-                progress.dismiss();
-
-                if (productList.size() == 0){
-                    Toast.makeText(ProductActivity.this, "Tidak ada data!", Toast.LENGTH_SHORT).show();
-                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                progress.dismiss();
-                Toast.makeText(ProductActivity.this, "Periksa koneksi internet!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(TransactionActivity.this, "Periksa koneksi internet!", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void filter(String text) {
-        ArrayList<Product> filteredList = new ArrayList<>();
+        ArrayList<Transaction> filteredList = new ArrayList<>();
 
-        for (Product item : productList){
-            if (item.getNama().toLowerCase().contains(text.toLowerCase()) || item.getJenis().toLowerCase().contains(text.toLowerCase()) || item.getIsi().toLowerCase().contains(text.toLowerCase())){
+        for (Transaction item : transactionList){
+            if (item.getPelanggan().toLowerCase().contains(text.toLowerCase()) || item.getMetodeBayar().toLowerCase().contains(text.toLowerCase())  || item.getProduk().toLowerCase().contains(text.toLowerCase())){
                 filteredList.add(item);
             }
         }

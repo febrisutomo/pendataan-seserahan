@@ -66,8 +66,10 @@
             android:columnCount="2"
             android:rowCount="3">
 
+
+
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardProduct"
+                android:id="@+id/cardTransaction"
                 android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
                 android:layout_gravity="fill"
@@ -87,20 +89,19 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="80dp"
-                        android:src="@drawable/ic_outline_card_giftcard_24"
+                        android:src="@drawable/ic_outline_point_of_sale_24"
                         app:tint="@color/pink" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="Produk"
+                        android:text="Transaksi"
                         android:textColor="@color/pink"
                         android:textSize="18sp" />
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
-
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardOrder"
@@ -131,6 +132,41 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:text="Pemesanan"
+                        android:textColor="@color/pink"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardProduct"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                android:layout_gravity="fill"
+                android:layout_margin="12dp"
+                android:clickable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="6dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:src="@drawable/ic_outline_card_giftcard_24"
+                        app:tint="@color/pink" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Produk"
                         android:textColor="@color/pink"
                         android:textSize="18sp" />
                 </LinearLayout>
@@ -173,40 +209,7 @@
             </androidx.cardview.widget.CardView>
 
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cv5"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                android:layout_gravity="fill"
-                android:layout_margin="12dp"
-                android:clickable="true"
-                android:foreground="?attr/selectableItemBackground"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="6dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="80dp"
-                        android:src="@drawable/ic_outline_shopping_cart_24"
-                        app:tint="@color/pink" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="Pembelian"
-                        android:textColor="@color/pink"
-                        android:textSize="18sp" />
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardEmployee"
@@ -281,5 +284,14 @@
 
     </LinearLayout>
 
-
+    <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
+    </com.google.android.gms.ads.AdView>
+    ...
 </FrameLayout>

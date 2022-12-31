@@ -7,7 +7,7 @@
     android:background="@drawable/background_pink"
     android:orientation="vertical"
     android:padding="32dp"
-    tools:context=".AddOrderActivity">
+    tools:context=".AddTransactionActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,6 +38,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:orientation="horizontal">
 
         <TextView
@@ -45,16 +46,18 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top"
             android:layout_weight=".3"
-            android:text="Pelanggan"
+            android:text="ID Pesanan"
             android:textColor="@color/black"
             android:textSize="16sp" />
 
+
         <Spinner
-            android:id="@+id/spinPelanggan"
+            android:id="@+id/spinPesanan"
             android:layout_width="0dp"
-            android:layout_weight=".7"
             android:layout_height="wrap_content"
+            android:layout_weight=".7"
             android:textSize="16sp" />
+
 
     </LinearLayout>
 
@@ -67,23 +70,21 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="top"
             android:layout_weight=".3"
+            android:text="Pelanggan"
             android:textColor="@color/black"
             android:textSize="16sp" />
 
-        <Button
-            android:id="@+id/btnCustomer"
+        <EditText
+            android:id="@+id/etPelanggan"
             android:layout_width="0dp"
             android:layout_weight=".7"
             android:layout_height="wrap_content"
-            android:text="Pelanggan Baru"
-            android:textAllCaps="false" />
+            android:inputType="none"
+            android:focusable="false"
+            android:textSize="16sp" />
 
     </LinearLayout>
-
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -98,11 +99,13 @@
             android:textColor="@color/black"
             android:textSize="16sp" />
 
-        <Spinner
-            android:id="@+id/spinProduk"
+        <EditText
+            android:id="@+id/etProduk"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:layout_weight=".7"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:focusable="false"
             android:textSize="16sp" />
 
     </LinearLayout>
@@ -111,6 +114,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <TextView
@@ -134,10 +138,12 @@
                 android:text="Rp "
                 android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/tvHarga"
+            <EditText
+                android:id="@+id/etHarga"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="none"
+                android:focusable="false"
                 android:text="0"
                 android:textSize="16sp" />
         </LinearLayout>
@@ -162,11 +168,11 @@
         <EditText
             android:id="@+id/etJumlah"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:layout_weight=".7"
-            android:hint="Masukkan Jumlah"
-            android:importantForAutofill="no"
-            android:inputType="number"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:focusable="false"
+            android:text="0"
             android:textSize="16sp" />
 
     </LinearLayout>
@@ -175,6 +181,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <TextView
@@ -198,11 +205,117 @@
                 android:text="Rp "
                 android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/tvTotal"
+            <EditText
+                android:id="@+id/etTotal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="none"
+                android:focusable="false"
+                android:text="0"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight=".3"
+            android:layout_height="wrap_content"
+            android:text="Metode"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <Spinner
+            android:id="@+id/spinMetode"
+            android:layout_width="0dp"
+            android:layout_weight=".7"
+            android:layout_height="wrap_content"
+            android:entries="@array/metode_bayar"
+            android:spinnerMode="dropdown" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".3"
+            android:text="Bayar"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".7"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:paddingLeft="4dp"
+                android:text="Rp "
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/etBayar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:text="0"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".3"
+            android:text="Kembali"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".7"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="4dp"
+                android:text="Rp "
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/etKembali"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:focusable="false"
                 android:text="0"
                 android:textSize="16sp" />
         </LinearLayout>
@@ -216,7 +329,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Simpan" />
-
 
 
 </LinearLayout>

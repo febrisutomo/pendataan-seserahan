@@ -38,7 +38,8 @@ public class AddProductActivity extends AppCompatActivity {
     ImageView ivGambar;
     Button btnGambar, btnSimpan;
 
-    String nama, isi, jenis, harga;
+    String nama, isi, jenis;
+    int harga;
 
     Uri uri;
     DatabaseReference db = FirebaseDatabase.getInstance().getReference();
@@ -83,7 +84,7 @@ public class AddProductActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 nama = etNama.getText().toString();
-                harga = etHarga.getText().toString();
+                harga = Integer.parseInt("0" + etHarga.getText().toString());
                 isi = etIsi.getText().toString();
                 jenis = spinJenis.getSelectedItem().toString();
 
@@ -93,7 +94,7 @@ public class AddProductActivity extends AppCompatActivity {
                 } else if (isi.isEmpty()) {
                     etIsi.setError("Isi tidak boleh kosong!");
                     etIsi.requestFocus();
-                } else if (harga.equals("0") || harga.equals("")) {
+                } else if (harga == 0) {
                     etHarga.setError("Harga tidak boleh kosong!");
                     etHarga.requestFocus();
                 } else {

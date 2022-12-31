@@ -25,25 +25,6 @@
                 android:layout_width="0dp"
                 android:layout_weight=".25"
                 android:layout_height="wrap_content"
-                android:text="ID Pesanan" />
-
-            <TextView
-                android:id="@+id/tvId"
-                android:layout_width="0dp"
-                android:layout_weight=".75"
-                android:layout_height="wrap_content"
-                android:text=":" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight=".25"
-                android:layout_height="wrap_content"
                 android:text="Tanggal" />
 
             <TextView
@@ -141,6 +122,62 @@
 
             <TextView
                 android:id="@+id/tvTotal"
+                android:layout_width="0dp"
+                android:layout_weight=".75"
+                android:layout_height="wrap_content"
+                android:text=":" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight=".25"
+                android:layout_height="wrap_content"
+                android:text="Bayar" />
+
+            <TextView
+                android:id="@+id/tvBayar"
+                android:layout_width="0dp"
+                android:layout_weight=".75"
+                android:layout_height="wrap_content"
+                android:text=":" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight=".25"
+                android:layout_height="wrap_content"
+                android:text="Metode" />
+
+            <TextView
+                android:id="@+id/tvMetode"
+                android:layout_width="0dp"
+                android:layout_weight=".75"
+                android:layout_height="wrap_content"
+                android:text=":" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight=".25"
+                android:layout_height="wrap_content"
+                android:text="Kembali" />
+
+            <TextView
+                android:id="@+id/tvKembali"
                 android:layout_width="0dp"
                 android:layout_weight=".75"
                 android:layout_height="wrap_content"

@@ -35,10 +35,12 @@ import java.util.Locale;
 
 public class EditOrderActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
+    Order order;
+
     EditText etTanggal, etJumlah;
     Spinner spinPelanggan, spinProduk;
 
-    TextView tvHarga, tvBayar;
+    TextView tvHarga, tvTotal;
 
     Button btnSimpan, btnCustomer;
 
@@ -50,9 +52,9 @@ public class EditOrderActivity extends AppCompatActivity implements DatePickerDi
 
     ArrayList<String> customerNameList, productNameList;
 
-    String tanggal, jumlah, produk, pelanggan;
+    String tanggal, produk, pelanggan;
 
-    int harga, bayar;
+    int harga, jumlah, total, productIndex, customerIndex;
 
     ArrayAdapter<String> adapterPelangan, adapterProduk;
 
@@ -60,6 +62,8 @@ public class EditOrderActivity extends AppCompatActivity implements DatePickerDi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_order);
+
+        order = new Order();
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Edit Pesanan");
@@ -70,14 +74,14 @@ public class EditOrderActivity extends AppCompatActivity implements DatePickerDi
         spinProduk = findViewById(R.id.spinProduk);
         tvHarga = findViewById(R.id.tvHarga);
         etJumlah = findViewById(R.id.etJumlah);
-        tvBayar = findViewById(R.id.tvBayar);
+        tvTotal = findViewById(R.id.tvTotal);
         btnSimpan = findViewById(R.id.btnSimpan);
         btnCustomer = findViewById(R.id.btnCustomer);
 
         customerList = new ArrayList<>();
         customerNameList = new ArrayList<>();
 
-        productList = new ArrayList<>();
+        productList = new ArrayList<Product>();
         productNameList = new ArrayList<>();
 
         customerNameList.add("Pilih Pelanggan");
@@ -113,7 +117,7 @@ public class EditOrderActivity extends AppCompatActivity implements DatePickerDi
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position != 0) {
-                    harga = Integer.parseInt(productList.get(position - 1).getHarga());
+                    harga = productList.get(position - 1).getHarga();
                     String hargaF = String.format(Locale.US, "%,d", harga).replace(",", ".");
                     tvHarga.setText(hargaF);
                 } else {
@@ -121,10 +125,10 @@ public class EditOrderActivity extends AppCompatActivity implements DatePickerDi
                     tvHarga.setText("0");
                 }
 
-                int jumlah = Integer.parseInt(etJumlah.getText().toString());
-                bayar = harga * jumlah;
-                String bayarF = String.format(Locale.US, "%,d", bayar).replace(",", ".");
-                tvBayar.setText(bayarF);
+                jumlah = Integer.parseInt(etJumlah.getText().toString());
+                total = harga * jumlah;
+                String totalF = String.format(Locale.US, "%,d", total).replace(",", ".");
+                tvTotal.setText(totalF);
             }
 
             @Override
@@ -152,11 +156,11 @@ public class EditOrderActivity extends AppCompatActivity implements DatePickerDi
 
                 if (s.length() > 0) {
                     int jumlah = Integer.parseInt(s.toString());
-                    bayar = harga * jumlah;
-                    String bayarF = String.format(Locale.US, "%,d", bayar).replace(",", ".");
-                    tvBayar.setText(bayarF);
+                    total = harga * jumlah;
+                    String totalF = String.format(Locale.US, "%,d", total).replace(",", ".");
+                    tvTotal.setText(totalF);
                 } else {
-                    tvBayar.setText("0");
+                    tvTotal.setText("0");
                 }
 
             }
@@ -181,43 +185,44 @@ public class EditOrderActivity extends AppCompatActivity implements DatePickerDi
     }
 
     private void getData() {
-        String getTanggal = getIntent().getExtras().getString("tanggal");
+        order = getIntent().getParcelableExtra("order");
 
-        String getHarga = getIntent().getExtras().getString("harga");
-        String getJumlah = getIntent().getExtras().getString("jumlah");
+        etTanggal.setText(order.getTanggal());
+        etJumlah.setText(Integer.toString(order.getJumlah()));
 
-        harga = Integer.parseInt(getHarga);
-
-        etTanggal.setText(getTanggal);
-        etJumlah.setText(getJumlah);
-
-        String hargaF = String.format(Locale.US, "%,d", Integer.parseInt(getHarga)).replace(",", ".");
+        String hargaF = String.format(Locale.US, "%,d", order.getHarga()).replace(",", ".");
         tvHarga.setText(hargaF);
 
-        int getBayar = Integer.parseInt(getHarga) * Integer.parseInt(getJumlah);
-        String bayarF = String.format(Locale.US, "%,d", getBayar).replace(",", ".");
-        tvBayar.setText(bayarF);
+        String totalF = String.format(Locale.US, "%,d", order.getHarga() * order.getJumlah()).replace(",", ".");
+        tvTotal.setText(totalF);
 
     }
 
     private void updateData() {
         tanggal = etTanggal.getText().toString();
-        pelanggan = spinPelanggan.getSelectedItem().toString();
-        produk = spinProduk.getSelectedItem().toString();
-        jumlah = etJumlah.getText().toString();
+        jumlah = Integer.parseInt("0" + etJumlah.getText().toString());
+
+        int idPelanggan = spinPelanggan.getSelectedItemPosition() - 1;
+
+        int idProduk = spinProduk.getSelectedItemPosition() - 1;
 
         if (tanggal.isEmpty()) {
             etTanggal.setError("Tanggal tidak boleh kosong!");
             etTanggal.requestFocus();
-        } else if (jumlah.equals("0") || jumlah.equals("")) {
+        }else if (idPelanggan == -1) {
+            ((TextView) spinPelanggan.getSelectedView()).setError("Harap pilih pelanggan!");
+        }else if (idProduk == -1) {
+            ((TextView) spinProduk.getSelectedView()).setError("Harap pilih produk!");
+        } else if (jumlah == 0) {
             etJumlah.setError("Jumlah tidak boleh kosong!");
             etJumlah.requestFocus();
         } else {
 
-            String getKey = getIntent().getExtras().getString("key");
+            pelanggan = customerList.get(idPelanggan).getKey();
+            produk = productList.get(idProduk).getKey();
 
-            db.child("Order").child(getKey)
-                    .setValue(new Order(tanggal, pelanggan, produk, Integer.toString(harga), jumlah))
+            db.child("Order").child(order.getKey())
+                    .setValue(new Order(order.getId(), tanggal, pelanggan, produk, harga, jumlah))
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {
@@ -232,34 +237,38 @@ public class EditOrderActivity extends AppCompatActivity implements DatePickerDi
                     });
             ;
 
-
         }
 
     }
 
     private void getProducts() {
+
         db.child("Product").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 productList.clear();
                 adapterProduk.clear();
+                productNameList.add("Pilih Produk");
 
+                productIndex = 0;
+
+                int i = 1;
                 for (DataSnapshot item : snapshot.getChildren()) {
                     Product product = item.getValue(Product.class);
 
                     product.setKey(item.getKey());
                     productList.add(product);
-                }
-
-                productNameList.add("Pilih Produk");
-
-                for (Product product : productList) {
                     productNameList.add(product.getNama());
+
+                    if (product.getKey().equals(order.getProduk())){
+                        productIndex = i;
+                    }
+
+                    i++;
                 }
-                String getProduk = getIntent().getExtras().getString("produk");
-                ArrayAdapter<String> produkAdp = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, productNameList);
-                spinProduk.setAdapter(produkAdp);
-                spinProduk.setSelection(produkAdp.getPosition(getProduk.trim()));
+
+                adapterProduk.notifyDataSetChanged();
+                spinProduk.setSelection(productIndex);
 
 
             }
@@ -269,6 +278,7 @@ public class EditOrderActivity extends AppCompatActivity implements DatePickerDi
 
             }
         });
+
     }
 
     private void getCustomers() {
@@ -277,22 +287,29 @@ public class EditOrderActivity extends AppCompatActivity implements DatePickerDi
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 customerList.clear();
                 adapterPelangan.clear();
+
+                customerNameList.add("Pilih Pelanggan");
+
+                customerIndex = 0;
+
+
+                int i = 1;
                 for (DataSnapshot item : snapshot.getChildren()) {
                     Customer customer = item.getValue(Customer.class);
 
                     customer.setKey(item.getKey());
                     customerList.add(customer);
-                }
-
-                customerNameList.add("Pilih Pelanggan");
-                for (Customer customer : customerList) {
                     customerNameList.add(customer.getNama());
+
+                    if (customer.getKey().equals(order.getPelanggan())){
+                        customerIndex = i;
+                    }
+
+                    i++;
                 }
 
-                String getPelanggan = getIntent().getExtras().getString("pelanggan");
-                ArrayAdapter<String> pelangganAdp = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, customerNameList);
-                spinPelanggan.setAdapter(pelangganAdp);
-                spinPelanggan.setSelection(pelangganAdp.getPosition(getPelanggan.trim()));
+                adapterPelangan.notifyDataSetChanged();
+                spinPelanggan.setSelection(customerIndex);
 
 
             }

@@ -51,14 +51,16 @@ public class ProductViewAdapter extends RecyclerView.Adapter<ProductViewAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ProductViewAdapter.ProductViewHolder holder, int position) {
-        final String nama = myList.get(position).getNama();
-        final String jenis = myList.get(position).getJenis();
-        final String harga = myList.get(position).getHarga();
-        final String isi = myList.get(position).getIsi();
-        final String gambar = myList.get(position).getGambar();
-        final String key = myList.get(position).getKey();
+        Product product = myList.get(position);
+        String nama = product.getNama();
+        String jenis = product.getJenis();
+        int harga = product.getHarga();
+        String isi = product.getIsi();
+        String gambar = product.getGambar();
+        String key = product.getKey();
 
-        String hargaF = "Rp " + String.format(Locale.US,"%,d", Integer.parseInt(harga)).replace(",",".");
+
+        String hargaF = "Rp " + String.format(Locale.US,"%,d", harga).replace(",",".");
 
         holder.tvNama.setText(": " + nama);
         holder.tvJenis.setText(": " + jenis);
@@ -85,19 +87,13 @@ public class ProductViewAdapter extends RecyclerView.Adapter<ProductViewAdapter.
 
                         switch (i) {
                             case 0:
-                                Bundle bundle = new Bundle();
-                                bundle.putString("nama", nama);
-                                bundle.putString("jenis", jenis);
-                                bundle.putString("harga", harga);
-                                bundle.putString("isi", isi);
-                                bundle.putString("gambar", gambar);
-                                bundle.putString("key", key);
+
                                 Intent intent = new Intent(view.getContext(), EditProductActivity.class);
-                                intent.putExtras(bundle);
+                                intent.putExtra("product", product);
                                 view.getContext().startActivity(intent);
                                 break;
                             case 1:
-                                delete(myList.get(holder.getAdapterPosition()), holder.getAdapterPosition(), view.getContext());
+                                delete(product, holder.getAdapterPosition(), view.getContext());
 
                                 break;
                         }

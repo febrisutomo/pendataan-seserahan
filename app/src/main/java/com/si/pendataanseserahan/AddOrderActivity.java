@@ -39,7 +39,7 @@ public class AddOrderActivity extends AppCompatActivity implements DatePickerDia
     EditText etTanggal, etJumlah;
     Spinner spinPelanggan, spinProduk;
 
-    TextView tvHarga, tvBayar;
+    TextView tvHarga, tvTotal;
 
     Button btnSimpan, btnCustomer;
 
@@ -51,9 +51,9 @@ public class AddOrderActivity extends AppCompatActivity implements DatePickerDia
 
     ArrayList<String> customerNameList, productNameList;
 
-    String tanggal, jumlah, produk, pelanggan;
+    String id, tanggal, produk, pelanggan;
 
-    int harga, bayar;
+    int harga, jumlah, total;
 
     ArrayAdapter<String> adapterProduk, adapterPelangan;
 
@@ -72,7 +72,7 @@ public class AddOrderActivity extends AppCompatActivity implements DatePickerDia
         spinProduk = findViewById(R.id.spinProduk);
         tvHarga = findViewById(R.id.tvHarga);
         etJumlah = findViewById(R.id.etJumlah);
-        tvBayar = findViewById(R.id.tvBayar);
+        tvTotal = findViewById(R.id.tvTotal);
         btnSimpan = findViewById(R.id.btnSimpan);
         btnCustomer = findViewById(R.id.btnCustomer);
 
@@ -116,7 +116,7 @@ public class AddOrderActivity extends AppCompatActivity implements DatePickerDia
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position != 0) {
-                    harga = Integer.parseInt(productList.get(position - 1).getHarga());
+                    harga = productList.get(position - 1).getHarga();
                     String hargaF = String.format(Locale.US, "%,d", harga).replace(",", ".");
                     tvHarga.setText(hargaF);
                 } else {
@@ -124,10 +124,10 @@ public class AddOrderActivity extends AppCompatActivity implements DatePickerDia
                     tvHarga.setText("0");
                 }
 
-                int jumlah = Integer.parseInt(etJumlah.getText().toString());
-                bayar = harga * jumlah;
-                String bayarF = String.format(Locale.US, "%,d", bayar).replace(",", ".");
-                tvBayar.setText(bayarF);
+                jumlah = Integer.parseInt(etJumlah.getText().toString());
+                total = harga * jumlah;
+                String totalF = String.format(Locale.US, "%,d", total).replace(",", ".");
+                tvTotal.setText(totalF);
             }
 
             @Override
@@ -155,11 +155,11 @@ public class AddOrderActivity extends AppCompatActivity implements DatePickerDia
 
                 if (s.length() > 0) {
                     int jumlah = Integer.parseInt(s.toString());
-                    bayar = harga * jumlah;
-                    String bayarF = String.format(Locale.US, "%,d", bayar).replace(",", ".");
-                    tvBayar.setText(bayarF);
+                    total = harga * jumlah;
+                    String totalF = String.format(Locale.US, "%,d", total).replace(",", ".");
+                    tvTotal.setText(totalF);
                 } else {
-                    tvBayar.setText("0");
+                    tvTotal.setText("0");
                 }
             }
         });
@@ -187,20 +187,34 @@ public class AddOrderActivity extends AppCompatActivity implements DatePickerDia
 
     private void storeData() {
         tanggal = etTanggal.getText().toString();
-        pelanggan = spinPelanggan.getSelectedItem().toString();
-        produk = spinProduk.getSelectedItem().toString();
-        jumlah = etJumlah.getText().toString();
+
+        int idPelanggan = spinPelanggan.getSelectedItemPosition() - 1;
+
+        int idProduk = spinProduk.getSelectedItemPosition() - 1;
+
+        jumlah = Integer.parseInt("0" + etJumlah.getText().toString());
+
+        String d[] = tanggal.split("/");
+
+        id = d[2] + d[1] + d[0] +  (int)(Math.random()*(9999-1000+1)+1000);
 
         if (tanggal.isEmpty()) {
             etTanggal.setError("Tanggal tidak boleh kosong!");
             etTanggal.requestFocus();
-        } else if (jumlah.equals("0") || jumlah.equals("")) {
+        } else if (idPelanggan == -1) {
+            ((TextView) spinPelanggan.getSelectedView()).setError("Harap pilih pelanggan!");
+        }else if (idProduk == -1) {
+            ((TextView) spinProduk.getSelectedView()).setError("Harap pilih produk!");
+        }else if (jumlah == 0) {
             etJumlah.setError("Jumlah tidak boleh kosong!");
             etJumlah.requestFocus();
         } else {
 
+            pelanggan = customerList.get(idPelanggan).getKey();
+            produk = productList.get(idProduk).getKey();
+
             db.child("Order").push()
-                    .setValue(new Order(tanggal, pelanggan, produk, Integer.toString(harga), jumlah))
+                    .setValue(new Order(id, tanggal, pelanggan, produk, harga, jumlah))
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {
@@ -224,18 +238,17 @@ public class AddOrderActivity extends AppCompatActivity implements DatePickerDia
                 productList.clear();
                 adapterProduk.clear();
 
+                productNameList.add("Pilih Produk");
+
                 for (DataSnapshot item : snapshot.getChildren()) {
                     Product product = item.getValue(Product.class);
 
                     product.setKey(item.getKey());
                     productList.add(product);
-                }
 
-                productNameList.add("Pilih Produk");
-
-                for (Product product : productList) {
                     productNameList.add(product.getNama());
                 }
+
 
                 adapterProduk.notifyDataSetChanged();
 
@@ -256,18 +269,16 @@ public class AddOrderActivity extends AppCompatActivity implements DatePickerDia
                 customerList.clear();
                 adapterPelangan.clear();
 
+                customerNameList.add("Pilih Pelanggan");
 
                 for (DataSnapshot item : snapshot.getChildren()) {
                     Customer customer = item.getValue(Customer.class);
 
                     customer.setKey(item.getKey());
                     customerList.add(customer);
-                }
-
-                customerNameList.add("Pilih Pelanggan");
-                for (Customer customer : customerList) {
                     customerNameList.add(customer.getNama());
                 }
+
                 adapterPelangan.notifyDataSetChanged();
 
 

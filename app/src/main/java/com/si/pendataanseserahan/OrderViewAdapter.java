@@ -26,23 +26,32 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.text.BreakIterator;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
 public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.OrderViewHolder> {
 
-    private ArrayList<Order> myList;
+    private ArrayList<Order> orderList;
+    private ArrayList<Product> productList;
+    private ArrayList<Customer> customerList;
 
     DatabaseReference db = FirebaseDatabase.getInstance().getReference();
 
-    public OrderViewAdapter(ArrayList<Order> myList) {
-        this.myList = myList;
+    String namaPelanggan, namaProduk, harga, total;
+
+
+    public OrderViewAdapter(ArrayList<Order> orderList, ArrayList<Customer> customerList, ArrayList<Product> productList) {
+        this.orderList = orderList;
+        this.productList = productList;
+        this.customerList = customerList;
     }
 
     public void filterList(ArrayList<Order> filteredList) {
-        myList = new ArrayList<>();
-        myList.addAll(filteredList);
+        orderList = new ArrayList<>();
+        orderList.addAll(filteredList);
         notifyDataSetChanged();
     }
 
@@ -56,23 +65,33 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.Orde
 
     @Override
     public void onBindViewHolder(@NonNull OrderViewAdapter.OrderViewHolder holder, int position) {
-        String tanggal = myList.get(position).getTanggal();
-        String pelanggan = myList.get(position).getPelanggan();
-        String produk = myList.get(position).getProduk();
-        String harga = myList.get(position).getHarga();
-        String jumlah = myList.get(position).getJumlah();
-        String key= myList.get(position).getKey();
+        Order order = orderList.get(position);
+        namaPelanggan = " ";
+        namaProduk = " ";
 
-        String hargaF = "Rp " + String.format(Locale.US,"%,d", Integer.parseInt(harga)).replace(",",".");
+        for (Customer customer : customerList){
+            if (customer.getKey().equals(order.getPelanggan())){
+                namaPelanggan = customer.getNama();
+            }
+        }
 
-        String bayar = "Rp " + String.format(Locale.US,"%,d", Integer.parseInt(harga) * Integer.parseInt(jumlah)).replace(",",".");
-        
-        holder.tvTanggal.setText(": " + tanggal);
-        holder.tvPelanggan.setText(": " + pelanggan);
-        holder.tvProduk.setText(": " + produk);
-        holder.tvHarga.setText(": " + hargaF);
-        holder.tvJumlah.setText(": " + jumlah);
-        holder.tvBayar.setText(": " + bayar);
+        for (Product product : productList){
+            if (product.getKey().equals(order.getProduk())){
+                namaProduk = product.getNama();
+            }
+        }
+
+        harga = "Rp " + String.format(Locale.US, "%,d", order.getHarga()).replace(",", ".");
+
+        total = "Rp " + String.format(Locale.US, "%,d", order.getHarga() * order.getJumlah()).replace(",", ".");
+
+        holder.tvId.setText(": " + order.getId());
+        holder.tvTanggal.setText(": " + order.getTanggal());
+        holder.tvPelanggan.setText(": " + namaPelanggan);
+        holder.tvProduk.setText(": " + namaProduk);
+        holder.tvHarga.setText(": " + harga);
+        holder.tvJumlah.setText(": " + order.getJumlah());
+        holder.tvTotal.setText(": " + total);
 
         holder.card.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -85,20 +104,12 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.Orde
 
                         switch (i) {
                             case 0:
-                                Bundle bundle = new Bundle();
-                                bundle.putString("tanggal", tanggal);
-                                bundle.putString("pelanggan", pelanggan);
-                                bundle.putString("produk", produk);
-                                bundle.putString("harga", harga);
-                                bundle.putString("jumlah", jumlah);
-                                bundle.putString("key", key);
-
-                                Intent intent = new Intent(view.getContext(), EditOrderActivity.class);
-                                intent.putExtras(bundle);
-                                view.getContext().startActivity(intent);
+                                Intent intent1 = new Intent(view.getContext(), EditOrderActivity.class);
+                                intent1.putExtra("order", order);;
+                                view.getContext().startActivity(intent1);
                                 break;
                             case 1:
-                                delete(myList.get(holder.getAdapterPosition()), holder.getAdapterPosition(), view.getContext());
+                                delete(order, holder.getAdapterPosition(), view.getContext());
 
                                 break;
                         }
@@ -114,32 +125,33 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.Orde
 
     @Override
     public int getItemCount() {
-        return myList.size();
+        return orderList.size();
     }
 
     public class OrderViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tvTanggal, tvPelanggan, tvProduk, tvHarga, tvJumlah, tvBayar;
+        TextView tvTanggal, tvPelanggan, tvProduk, tvHarga, tvJumlah, tvTotal, tvId;
 
         CardView card;
 
         public OrderViewHolder(@NonNull View view) {
             super(view);
 
+            tvId = view.findViewById(R.id.tvId);
             tvTanggal = view.findViewById(R.id.tvTanggal);
             tvPelanggan = view.findViewById(R.id.tvPelanggan);
             tvProduk = view.findViewById(R.id.tvProduk);
             tvHarga = view.findViewById(R.id.tvHarga);
             tvJumlah = view.findViewById(R.id.tvJumlah);
-            tvBayar = view.findViewById(R.id.tvBayar);
+            tvTotal = view.findViewById(R.id.tvTotal);
             card = view.findViewById(R.id.card);
 
         }
     }
 
-    public void delete(Order product, int position, Context context) {
+    public void delete(Order order, int position, Context context) {
         if (db != null) {
-            db.child("Order").child(product.getKey())
+            db.child("Order").child(order.getKey())
                     .removeValue()
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -149,7 +161,6 @@ public class OrderViewAdapter extends RecyclerView.Adapter<OrderViewAdapter.Orde
                     });
         }
     }
-
 
 
 }

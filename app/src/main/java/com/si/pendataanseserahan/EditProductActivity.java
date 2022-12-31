@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,12 +31,12 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
 import java.util.UUID;
 
 public class EditProductActivity extends AppCompatActivity {
 
-    String nama, jenis, isi, harga;
+    String nama, jenis, isi, key;
+    int harga;
     EditText etNama, etIsi, etHarga;
     Spinner spinJenis;
     ImageView ivGambar;
@@ -66,7 +65,6 @@ public class EditProductActivity extends AppCompatActivity {
         progress.setMessage("Harap tunggu sebentar...");
         progress.setCancelable(false);
 
-
         etNama = findViewById(R.id.etNama);
         etIsi = findViewById(R.id.etIsi);
         etHarga = findViewById(R.id.etHarga);
@@ -75,16 +73,14 @@ public class EditProductActivity extends AppCompatActivity {
         btnGambar = findViewById(R.id.btnGambar);
         btnSimpan = findViewById(R.id.btnSimpan);
 
+        getData();
+
         btnGambar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getFoto();
             }
         });
-
-        getData();
-
-
 
         btnSimpan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,7 +89,7 @@ public class EditProductActivity extends AppCompatActivity {
                 nama = etNama.getText().toString();
                 jenis = spinJenis.getSelectedItem().toString();
                 isi = etIsi.getText().toString();
-                harga = etHarga.getText().toString();
+                harga = Integer.parseInt("0" + etHarga.getText().toString());
 
                 if (nama.isEmpty()) {
                     etNama.setError("Nama tidak boleh kosong!");
@@ -101,7 +97,7 @@ public class EditProductActivity extends AppCompatActivity {
                 } else if (isi.isEmpty()) {
                     etIsi.setError("Isi tidak boleh kosong!");
                     etIsi.requestFocus();
-                } else if (harga.equals("0") || harga.equals("")) {
+                } else if (harga == 0) {
                     etHarga.setError("Harga tidak boleh kosong!");
                     etHarga.requestFocus();
                 } else {
@@ -128,8 +124,6 @@ public class EditProductActivity extends AppCompatActivity {
 
         String pathImage = "gambar/" + fileName;
 
-        String getKey = getIntent().getExtras().getString("key");
-
         progress.show();
 
         UploadTask uploadTask = storage.child(pathImage).putBytes(bytes);
@@ -141,7 +135,7 @@ public class EditProductActivity extends AppCompatActivity {
                         .addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-                                db.child("Product").child(getKey)
+                                db.child("Product").child(key)
                                         .setValue(new Product(nama, jenis, harga, isi, uri.toString().trim()))
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
@@ -166,31 +160,34 @@ public class EditProductActivity extends AppCompatActivity {
     }
 
     private void getData() {
-        String getNama = getIntent().getExtras().getString("nama");
-        String getHarga = getIntent().getExtras().getString("harga");
-        String getIsi = getIntent().getExtras().getString("isi");
-        String getJenis = getIntent().getExtras().getString("jenis");
-        String getGambar = getIntent().getExtras().getString("gambar");
+        Product product = getIntent().getParcelableExtra("product");
+        key = "";
 
+        if (product != null){
+            key = product.getKey();
 
-        if (getGambar.isEmpty()) {
-            ivGambar.setImageResource(R.drawable.image);
-        } else {
-            Glide.with(EditProductActivity.this)
-                    .load(getGambar)
-                    .into(ivGambar);
+            if (product.getGambar().isEmpty()) {
+                ivGambar.setImageResource(R.drawable.image);
+            } else {
+                Glide.with(EditProductActivity.this)
+                        .load(product.getGambar())
+                        .into(ivGambar);
+            }
+
+            etNama.setText(product.getNama());
+
+            String strJenis[] = getResources().getStringArray(R.array.jenis);
+
+            ArrayAdapter<String> jenisAdp = new ArrayAdapter<String>(this, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, strJenis);
+            spinJenis.setAdapter(jenisAdp);
+            spinJenis.setSelection(jenisAdp.getPosition(product.getJenis().trim()));
+
+            etIsi.setText(product.getIsi());
+            etHarga.setText(Integer.toString(product.getHarga()));
         }
 
-        etNama.setText(getNama);
 
-        String strJenis[] = getResources().getStringArray(R.array.jenis);
 
-        ArrayAdapter<String> jenisAdp = new ArrayAdapter<String>(this, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, strJenis);
-        spinJenis.setAdapter(jenisAdp);
-        spinJenis.setSelection(jenisAdp.getPosition(getJenis.trim()));
-
-        etIsi.setText(getIsi);
-        etHarga.setText(getHarga);
 
     }
 
